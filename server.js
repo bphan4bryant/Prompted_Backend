@@ -1,4 +1,4 @@
-import { findUser } from './utils.js';
+const utils = require('./utils.js')
 
 const express = require('express');
 const { createServer } = require('node:http');
@@ -18,6 +18,7 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
+  console.log(socket.id);
     socket.on('joinGame', (name) => {
       let newUser = {
         username : name,
@@ -38,7 +39,7 @@ io.on('connection', (socket) => {
 
     socket.on('submitPrompt', (username, p) => { // Get the url to the image?
       count+=1;
-      let userObj = findUser(users, username);
+      let userObj = utils.findUser(users, username);
       userObj.prompt = p;
 
       if(count == users.length) {
@@ -49,7 +50,7 @@ io.on('connection', (socket) => {
 
     socket.on('submitVote', (username) => {
       count+=1;
-      let userObj = findUser(users, username);
+      let userObj = utils.findUser(users, username);
       userObj.points+=1;
 
       if (count == users.length) {
