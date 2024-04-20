@@ -3,7 +3,7 @@ const utils = require('./utils.js')
 const express = require('express');
 const { createServer } = require('node:http');
 const { join } = require('node:path');
-const { Server } = require('socket.io');
+const { Server, Namespace } = require('socket.io');
 
 const app = express();
 const server = createServer(app);
@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
 
       users.push(newUser);
 
-      socket.emit("numUsers", users.length);
+      socket.emit("join_accepted", users.length);
 
       io.to(socket.id).emit("joinGame");
     });
