@@ -30,6 +30,8 @@ io.on('connection', (socket) => {
 
       users.push(newUser);
 
+      socket.emit("numUsers", users.length);
+
       io.to(socket.id).emit("joinGame");
     });
 
