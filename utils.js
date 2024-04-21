@@ -18,3 +18,9 @@ function findWinner(users) {
     }
     return null;
 }
+
+function emitToAll(io, sids, message) {
+    for (let i=0; i<sids.length; i++) {
+        io.to(sids[i]).emit(message);
+    }
+}

@@ -11,6 +11,7 @@ const io = new Server(server);
 const port = 3001;
 
 let users = [];
+let sids = [];
 let count = 0;
 
 app.get('/', (req, res) => {
@@ -19,50 +20,53 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   console.log(socket.id);
-    socket.on('joinGame', (name) => {
-      let newUser = {
-        username : name,
-        sid : socket.id,
-        prompt : null,
-        imageurl : null,
-        points : 0
-      };
+  socket.on('joinGame', (name) => {
+    let newUser = {
+      username : name,
+      sid : socket.id,
+      prompt : null,
+      imageurl : null,
+      points : 0
+    };
 
-      users.push(newUser);
+    users.push(newUser);
+    sids.push(socket.id);
 
-      socket.emit("join_accepted", users.length);
+    for (let i=0; i<sids.length; i++) {
+      io.to(sids[i]).emit("join_accepted", users.length);
+    }
 
-      io.to(socket.id).emit("joinGame");
-    });
-
-    socket.on('gameStart', () => {
-      socket.emit("gameStart");
-    });
-
-    socket.on('submitPrompt', (username, p) => { // Get the url to the image?
-      count+=1;
-      let userObj = utils.findUser(users, username);
-      userObj.prompt = p;
-
-      if(count == users.length) {
-        count = 0;
-        socket.emit("voting");
-      }
-    });
-
-    socket.on('submitVote', (username) => {
-      count+=1;
-      let userObj = utils.findUser(users, username);
-      userObj.points+=1;
-
-      if (count == users.length) {
-        count = 0;
-        socket.emit("winner")
-      }
-    });
-
-
+    io.to(socket.id).emit("joinGame");
   });
+
+  socket.on('gameStart', () => {
+    socket.emit("gameStart");
+  });
+
+  socket.on('submitPrompt', (username, p) => { // Get the url to the image?
+    count+=1;
+    let userObj = utils.findUser(users, username);
+    userObj.prompt = p;
+
+    if(count == users.length) {
+      count = 0;
+      socket.emit("voting");
+    }
+  });
+
+  socket.on('submitVote', (username) => {
+    count+=1;
+    let userObj = utils.findUser(users, username);
+    userObj.points+=1;
+
+    if (count == users.length) {
+      count = 0;
+      socket.emit("winner")
+    }``
+  });
+
+
+});
 
 server.listen(port, () => {
   console.log('server running at http://localhost:' + port);
