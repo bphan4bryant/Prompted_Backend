@@ -42,12 +42,14 @@ io.on('connection', (socket) => {
       io.to(sids[i]).emit("join_accepted", users.length);
     }
 
-    io.to(socket.id).emit("joinGame");
+    // io.to(socket.id).emit("joinGame");
   });
 
     socket.on('gameStart', () => {
       let image = utils.getPromptImage();
-      socket.emit("gameStart", image);
+      for (let i=0; i<sids.length; i++) {
+        io.to(sids[i]).emit("game_started", image);
+      }
     });
 
   socket.on('submitPrompt', (username, p) => { // Get the url to the image?
