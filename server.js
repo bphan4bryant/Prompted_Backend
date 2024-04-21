@@ -47,10 +47,10 @@ io.on('connection', (socket) => {
     // io.to(socket.id).emit("joinGame");
   });
 
-    socket.on('gameStart', (files) => {
-      let image = utils.pickRandomImage(files);
+    socket.on('gameStart', () => {
+      let image_idx = utils.pickRandomImage();
       for (let i=0; i<sids.length; i++) {
-        io.to(sids[i]).emit("game_started", image);
+        io.to(sids[i]).emit("game_started", image_idx);
       }
     });
 

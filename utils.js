@@ -22,9 +22,9 @@ function findWinner(users) {
     return null;
 }
 
-function pickRandomImage(files) {
+function pickRandomImage() {
     let idx = Math.floor(Math.random() * 3);
-    return files[idx];
+    return idx;
 }
 
 
