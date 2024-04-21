@@ -12,6 +12,7 @@ const port = 3001;
 
 let users = [];
 let usernames = [];
+let gallery = [];
 let sids = [];
 let count = 0;
 
@@ -54,18 +55,22 @@ io.on('connection', (socket) => {
       }
     });
 
-  socket.on('submitPrompt', (p) => { // Get the url to the image?
+  socket.on('sendImage', (img_url) => { // Get the url to the image?
     count+=1;
     // let userObj = utils.findUser(users, username);
     // userObj.prompt = p;
 
-    data = utils.generateImage(p);
+    // data = utils.generateImage(p);
+    // data = p;
+    // console.log(data);
 
-    console.log(data);
+    gallery.push(img_url)
 
     if(count == users.length) {
       count = 0;
-      socket.emit("voting");
+      for (let i=0; i<sids.length; i++) {
+        io.to(sids[i]).emit("images_grabbed", gallery);
+      }
     }
   });
 
