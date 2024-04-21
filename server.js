@@ -18,6 +18,12 @@ app.get('/', (req, res) => {
   res.send("Hello");
 });
 
+// app.get('/promptImage', (req, res) => {
+//   let path = utils.getPromptImagePath();
+//   console.log(path);
+//   res.sendFile(path);
+// });
+
 io.on('connection', (socket) => {
   console.log(socket.id);
   socket.on('joinGame', (name) => {
@@ -39,9 +45,10 @@ io.on('connection', (socket) => {
     io.to(socket.id).emit("joinGame");
   });
 
-  socket.on('gameStart', () => {
-    socket.emit("gameStart");
-  });
+    socket.on('gameStart', () => {
+      let image = utils.getPromptImage();
+      socket.emit("gameStart", image);
+    });
 
   socket.on('submitPrompt', (username, p) => { // Get the url to the image?
     count+=1;

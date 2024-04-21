@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 function findUser(users, username) {
     for (let i = 0; i < users.length; i++) {
         if (username == users[i].username) {
@@ -19,8 +21,13 @@ function findWinner(users) {
     return null;
 }
 
-function emitToAll(io, sids, message) {
-    for (let i=0; i<sids.length; i++) {
-        io.to(sids[i]).emit(message);
-    }
+function getPromptImage() {
+    var files = fs.readdirSync('./assets/');
+    var indx = Math.floor(Math.random() * 3);
+    console.log('./assets/' + files[indx]);
+    var imageBuffer = fs.readFileSync('./assets/'+files[indx]);
+    var base64Image = imageBuffer.toString('base64');
+    return base64Image;
 }
+
+module.exports = { findUser, findWinner, getPromptImage};
