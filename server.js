@@ -45,8 +45,8 @@ io.on('connection', (socket) => {
     // io.to(socket.id).emit("joinGame");
   });
 
-    socket.on('gameStart', () => {
-      let image = utils.getPromptImage();
+    socket.on('gameStart', (files) => {
+      let image = utils.pickRandomImage(files);
       for (let i=0; i<sids.length; i++) {
         io.to(sids[i]).emit("game_started", image);
       }

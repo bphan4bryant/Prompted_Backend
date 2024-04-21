@@ -21,13 +21,9 @@ function findWinner(users) {
     return null;
 }
 
-function getPromptImage() {
-    var files = fs.readdirSync('./assets/');
-    var indx = Math.floor(Math.random() * 3);
-    console.log('./assets/' + files[indx]);
-    var imageBuffer = fs.readFileSync('./assets/'+files[indx]);
-    var base64Image = imageBuffer.toString('base64');
-    return base64Image;
+function pickRandomImage(files) {
+    let idx = Math.floor(Math.random() * 3);
+    return files[idx];
 }
 
-module.exports = { findUser, findWinner, getPromptImage};
+module.exports = { findUser, findWinner, pickRandomImage};
