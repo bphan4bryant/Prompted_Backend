@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
 
     socket.on('gameStart', () => {
       let image = utils.getPromptImage();
-      socket.emit("gameStart", image);
+      socket.emit("game_started", image);
     });
 
   socket.on('submitPrompt', (username, p) => { // Get the url to the image?
