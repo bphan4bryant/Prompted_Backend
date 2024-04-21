@@ -11,6 +11,7 @@ const io = new Server(server);
 const port = 3001;
 
 let users = [];
+let usernames = [];
 let sids = [];
 let count = 0;
 
@@ -36,10 +37,11 @@ io.on('connection', (socket) => {
     };
 
     users.push(newUser);
+    usernames.push(name)
     sids.push(socket.id);
 
     for (let i=0; i<sids.length; i++) {
-      io.to(sids[i]).emit("join_accepted", users.length);
+      io.to(sids[i]).emit("join_accepted", users.length, usernames);
     }
 
     // io.to(socket.id).emit("joinGame");
@@ -52,10 +54,14 @@ io.on('connection', (socket) => {
       }
     });
 
-  socket.on('submitPrompt', (username, p) => { // Get the url to the image?
+  socket.on('submitPrompt', (p) => { // Get the url to the image?
     count+=1;
-    let userObj = utils.findUser(users, username);
-    userObj.prompt = p;
+    // let userObj = utils.findUser(users, username);
+    // userObj.prompt = p;
+
+    data = utils.generateImage(p);
+
+    console.log(data);
 
     if(count == users.length) {
       count = 0;
@@ -80,3 +86,4 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
   console.log('server running at http://localhost:' + port);
 });
+
